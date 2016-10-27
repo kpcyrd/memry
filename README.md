@@ -21,8 +21,10 @@ npm install -g memry
 curl -sST- http://127.0.0.1:8018 < file.bin
 # upload multiple files
 tar cvvJ files/*.bin.part | curl -T- http://127.0.0.1:8018
-# transfer log files only readable by root on systems that don't allow ssh as root
+# upload log files only readable by root on systems that don't allow ssh as root
 sudo tar cvvJ /var/log/nginx | curl -T- http://127.0.0.1:8018
+# upload a single file with working progress bar
+curl -T file.bin http://127.0.0.1:8018
 ```
 
 ## License
