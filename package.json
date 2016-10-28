@@ -22,7 +22,7 @@
     "memry": "bin/cli.js"
   },
   "author": "kpcyrd",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/kpcyrd/memry/issues"
   },

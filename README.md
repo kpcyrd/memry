@@ -50,4 +50,4 @@ The caption in the image reads "The tapir sent from Bengkulu to Calcutta in 1816
 
 ## License
 
-MIT
+GPLv3
