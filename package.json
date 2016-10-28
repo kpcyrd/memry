@@ -1,7 +1,7 @@
 {
   "name": "memry",
   "version": "1.0.1",
-  "description": "curl -sST- http://127.0.0.1:8018 < file.bin",
+  "description": "mem'ry, tar pipe curl",
   "main": "memry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,6 +11,13 @@
     "type": "git",
     "url": "git+https://github.com/kpcyrd/memry.git"
   },
+  "keywords": [
+    "memry",
+    "mem'ry",
+    "tar",
+    "pipe",
+    "curl"
+  ],
   "bin": {
     "memry": "bin/cli.js"
   },
