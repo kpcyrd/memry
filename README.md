@@ -27,6 +27,14 @@ sudo tar cvvJ /var/log/nginx | curl -T- http://127.0.0.1:8018
 curl -T file.bin http://127.0.0.1:8018
 ```
 
+## Usage with docker
+
+```
+docker build -t memry .
+mkdir storage
+docker run --rm -p 80:8018 -v `pwd`/storage:/storage memry /storage -h 0.0.0.0
+```
+
 ## License
 
 MIT
