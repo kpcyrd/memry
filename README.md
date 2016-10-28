@@ -44,6 +44,10 @@ mkdir storage
 docker run --rm -p 80:8018 -v `pwd`/storage:/storage memry /storage -h 0.0.0.0
 ```
 
+## Trivia
+
+The caption in the image reads "The tapir sent from Bengkulu to Calcutta in 1816" and is about 200 years old.
+
 ## License
 
 MIT
