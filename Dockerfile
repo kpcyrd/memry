@@ -8,4 +8,6 @@ COPY bin/ ./bin/
 COPY memry.js ./
 RUN npm install -g
 USER memry
+ENV MEMRY_HOST 0.0.0.0
+ENV MEMRY_STORAGE /storage
 ENTRYPOINT ["memry"]

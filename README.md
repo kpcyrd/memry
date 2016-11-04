@@ -41,7 +41,7 @@ curl -T file.bin http://127.0.0.1:8018
 ```
 docker build -t memry .
 mkdir storage
-docker run --rm -p 80:8018 -v `pwd`/storage:/storage memry /storage -h 0.0.0.0
+docker run --rm -p 80:8018 -v `pwd`/storage:/storage memry
 ```
 
 ## Trivia
