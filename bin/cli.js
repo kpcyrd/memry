@@ -16,13 +16,13 @@
 var argv = require('minimist')(process.argv.slice(2));
 var memry = require('..');
 
-var path = argv._[0];
+var path = argv._[0] || process.env.MEMRY_STORAGE;
 if(!path) {
     console.error('Usage: memry <storage-path>');
     process.exit(1);
 }
-var port = parseInt(argv.port || argv.p || '8018');
-var host = argv.host || argv.h || '127.0.0.1';
+var port = parseInt(argv.port || argv.p || process.env.MEMRY_PORT || '8018');
+var host = argv.host || argv.h || process.env.MEMRY_HOST || '127.0.0.1';
 
 memry
     .createServer({
