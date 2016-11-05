@@ -2,7 +2,7 @@
   "name": "memry",
   "version": "1.0.2",
   "description": "mem'ry, tar pipe curl",
-  "main": "memry.js",
+  "main": "src/memry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node bin/cli.js"
