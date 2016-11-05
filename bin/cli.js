@@ -23,6 +23,7 @@ if(!path) {
 }
 var port = parseInt(argv.port || argv.p || process.env.MEMRY_PORT || '8018');
 var host = argv.host || argv.h || process.env.MEMRY_HOST || '127.0.0.1';
+var authFile = argv.auth || argv.a || process.env.MEMRY_AUTHFILE;
 
 memry
     .createServer({
@@ -30,6 +31,7 @@ memry
         'path': path,
         'host': host,
         'port': port,
+        'authFile': authFile,
     })
     .listen(port, host, function() {
         console.log('[+] ready http://%s:%d -> %s', host, port, path);

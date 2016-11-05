@@ -28,6 +28,8 @@
   },
   "homepage": "https://github.com/kpcyrd/memry#readme",
   "dependencies": {
-    "minimist": "^1.2.0"
+    "basic-auth": "^1.0.4",
+    "minimist": "^1.2.0",
+    "scrypt": "^6.0.3"
   }
 }
