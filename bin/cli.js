@@ -28,21 +28,20 @@ switch(action) {
         var path = argv._[1] || process.env.MEMRY_STORAGE;
         if(!path) usage();
 
-        var port = parseInt(argv.port || argv.p || process.env.MEMRY_PORT || '8018');
         var host = argv.host || argv.h || process.env.MEMRY_HOST || '127.0.0.1';
-        var authFile = argv.auth || argv.a || process.env.MEMRY_AUTHFILE;
+        var port = parseInt(argv.port || argv.p || process.env.MEMRY_PORT || '8018');
 
-        memry
+        var server = memry
             .createServer({
-                'storage': 'fs',
-                'path': path,
-                'host': host,
-                'port': port,
-                'authFile': authFile,
-            })
-            .listen(port, host, function() {
-                console.log('[+] ready http://%s:%d -> %s', host, port, path);
+                storage: 'fs',
+                path: path,
+                authFile: argv.auth || argv.a || process.env.MEMRY_AUTHFILE,
+                tlsKey: argv['tls-key'] || process.env.MEMRY_TLS_KEY,
+                tlsCert: argv['tls-cert'] || process.env.MEMRY_TLS_CERT,
             });
+        server.listen(port, host, function() {
+            console.log('[+] ready %s://%s:%d -> %s', server.scheme, host, port, path);
+        });
         break;
 
     case 'htpasswd':

@@ -44,6 +44,12 @@ mkdir storage
 docker run --rm -p 80:8018 -v `pwd`/storage:/storage memry
 ```
 
+## Generate https certificate
+
+```
+openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+```
+
 ## Trivia
 
 mem'ry is an archaic term for "memory". The caption in the image reads "The tapir sent from Bengkulu to Calcutta in 1816" and is about 200 years old.

@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 var http = require('http');
+var https = require('https');
 var crypto = require('crypto');
 var fs = require('fs');
 var path = require('path');
@@ -24,6 +25,24 @@ var random = function(len) {
 };
 
 exports.auth = auth;
+
+var makeServer = function(options, callback) {
+    var server;
+
+    if(options.tlsKey && options.tlsCert) {
+        server = https.createServer({
+            key: fs.readFileSync(options.tlsKey),
+            cert: fs.readFileSync(options.tlsCert),
+        }, callback);
+        server.scheme = 'https';
+    } else {
+        server = http.createServer(callback);
+        server.scheme = 'http';
+    }
+
+    return server;
+};
+
 exports.createServer = function(options) {
     options = options || {};
     var filenameLength = options.filenameLength || 16;
@@ -31,7 +50,7 @@ exports.createServer = function(options) {
 
     var authDB = new auth.AuthDB(options.authFile);
 
-    return http.createServer(function(req, res) {
+    return makeServer(options, function(req, res) {
         var user = '(anonymous)';
         var id = random(filenameLength);
         var destPath = path.join(storagePath, id + '.bin');
