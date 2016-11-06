@@ -23,5 +23,9 @@ before_script:
 
 script:
 - docker ps | grep -q memry
-- echo "ohai" | curl -sST- http://127.0.0.1 > r.json
-- echo "59a6f8a560dc8a7f99f470570bcc100f50e415922fbf71a27af34c5630cf233a  storage/`jq -r .id < r.json`.bin" | sha256sum -c
+- ./test.sh curl -sST- http://127.0.0.1
+- docker kill memry
+
+- openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+- docker run -d --name memry -p 127.0.0.1:80:8018 -v `pwd`/storage:/storage memry --tls-cert cert.pem --tls-key key.pem
+- ./test.sh curl -sSkT- https://127.0.0.1
