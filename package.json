@@ -1,6 +1,6 @@
 {
   "name": "memry",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "mem'ry, tar pipe curl",
   "main": "src/memry.js",
   "scripts": {
