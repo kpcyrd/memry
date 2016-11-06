@@ -1,0 +1,14 @@
+[Unit]
+Description=mem'ry: tar pipe curl
+
+[Service]
+User=memry
+PermissionsStartOnly=true
+Environment="MEMRY_STORAGE=/var/lib/memry/storage"
+EnvironmentFile=-/etc/memryrc
+ExecStartPre=-/bin/mkdir -pm 0750 ${MEMRY_STORAGE}
+ExecStartPre=-/usr/bin/mkdir -pm 0750 ${MEMRY_STORAGE}
+ExecStart=/usr/bin/memry listen ${MEMRY_STORAGE}
+
+[Install]
+WantedBy=multi-user.target

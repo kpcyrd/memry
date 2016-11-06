@@ -11,7 +11,7 @@
 
 ![logo](logo.jpg)
 
-mem'ry was written for situations where you have to transfer files between two untrusted servers without the risk of compromising your private keys by forwarding your ssh keys (no sane person would do that, right?).
+mem'ry was written for situations where you have to transfer files between two untrusted servers without the risk of compromising your private keys by forwarding your `ssh-agent` (no sane person would do that, right?).
 
 You don't need to install any software on the sending system since standard curl is sufficient. It also works on systems that are running low on disk as there's no need to create temporary files, multiple files can be uploaded by packing them with `tar`, writing the archive to stdout and streaming it into `curl`.
 
@@ -34,6 +34,10 @@ tar cvvJ files/*.bin.part | curl -T- http://127.0.0.1:8018
 sudo tar cvvJ /var/log/nginx | curl -T- http://127.0.0.1:8018
 # upload a single file with working progress bar
 curl -T file.bin http://127.0.0.1:8018
+# create auth file
+memry htpasswd foo >> auth.txt
+# upload with authentication
+curl -T file.bin -u foo https://127.0.0.1:8018
 ```
 
 ## Usage with docker
@@ -42,12 +46,19 @@ curl -T file.bin http://127.0.0.1:8018
 docker build -t memry .
 mkdir storage
 docker run --rm -p 80:8018 -v `pwd`/storage:/storage memry
-```
 
-## Generate https certificate
+# Start with authentication
+echo bar | memry htpasswd foo >> auth.txt
+echo buzz | docker run -i --rm memry htpasswd fizz >> auth.txt
+docker run --rm -p 80:8018 -v `pwd`/storage:/storage  \
+    -v `pwd`/auth.txt:/auth.txt:ro \
+    memry -a /auth.txt
 
-```
-openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+# Start with https
+openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -subj /CN=localhost
+docker run --rm -p 443:8018 -v `pwd`/storage:/storage  \
+    -v `pwd`/cert.pem:/cert.pem:ro -v `pwd`/key.pem:/key.pem:ro \
+    memry --tls-cert /cert.pem --tls-key /key.pem
 ```
 
 ## Trivia

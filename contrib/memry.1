@@ -1,0 +1,77 @@
+.TH MEMRY 1 "November 5, 2016" "MEMRY" "GNU MEMRY Manual"
+.SH NAME
+memry \- mem'ry, tar pipe curl
+.SH SYNOPSIS
+.SS Running a server
+\fBmemry listen
+[\fB\-h\fR \fIIP\fR]
+[\fB\-\-host\fR \fIIP\fR]
+[\fB\-p\fR \fIPORT\fR]
+[\fB\-\-port\fR \fIPORT\fR]
+[\fB\-a\fR \fIFILE\fR]
+[\fB\-\-auth\fR \fIFILE\fR]
+[\fB\-\-tls\-cert\fR \fIFILE\fR]
+[\fB\-\-tls\-key\fR \fIFILE\fR]
+.IR STORAGE
+.SS Generating an auth.txt
+\fBmemry htpasswd
+.IR USER
+.SH DESCRIPTION
+.SS Abstract
+mem'ry was written for situations where you have to transfer files between two untrusted servers without the risk of compromising your private keys by forwarding your \fBssh-agent\fR (no sane person would do that, right?).
+
+You don't need to install any software on the sending system since standard curl is sufficient. It also works on systems that are running low on disk as there's no need to create temporary files, multiple files can be uploaded by packing them with \fBtar\fR, writing the archive to stdout and streaming it into \fBcurl\fR.
+
+Basically, it's \fBnc\fR file transfer for http(s) (except that you actually know if a file was transferred completely or partially).
+.SS listen
+Starts a server and writes request bodies to \fISTORAGE\fR.
+The request body is streamed to disk with a random name and will have a \fB.part\fR extension. When the request finished and the file was written successfully it's renamed to \fB.bin\fR.
+You can enable authentication and encrypted transport by using the respective flags, yet it might be preferable to do that by using a reverse proxy.
+.SS htpasswd
+Writes authentication lines to stdout. The password is prompted interactively but can be streamed to stdin. The password is then hashed with \fBscrypt\fR and suitable for authentication with \fBmemry listen \-a\fR.
+.SH OPTIONS
+.SS listen
+.TP
+.BR \-h ", " \-\-host =\fIIP\fR
+Bind to this host.
+Default is \fB127.0.0.1\fR.
+.TP
+.BR \-p ", " \-\-port =\fIPORT\fR
+Listen on this port.
+Default is \fB8018\fR.
+.TP
+.BR \-a ", " \-\-auth =\fIFILE\fR
+Authentication file. Enables authentication. See \fBmemry htpasswd\fR for file format.
+.TP
+.BR \-\-tls\-cert =\fIFILE\fR
+TLS certificate that should be used.
+Enables https.
+Depends in \fB\-\-tls\-key\fR.
+.TP
+.BR \-\-tls\-key =\fIFILE\fR
+TLS private key that should be used.
+Enables https.
+Depends in \fB\-\-tls\-cert\fR.
+.TP
+\fISTORAGE\fR
+The path where files should be stored.
+.SS htpasswd
+.TP
+\fIUSER\fR
+Set the username of the user to be created. Password will be prompted interactively.
+.SH "SEE ALSO"
+.BR tar (1),
+.BR curl (1),
+.BR nc (1),
+.BR node (1),
+.BR nginx (8).
+.SH TRIVIA
+mem'ry is an archaic term for "memory". The caption in the image reads "The tapir sent from Bengkulu to Calcutta in 1816" and is about 200 years old.
+.SH "BUG REPORTS"
+Report bugs at <https://github.com/kpcyrd/memry/issues>
+.SH COPYRIGHT
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+.br
+.ad
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.

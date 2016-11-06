@@ -18,7 +18,20 @@ var read = require('read');
 var memry = require('..');
 
 var usage = function() {
-    console.error('Usage: memry <htpasswd <user>|listen <storage-path>');
+    console.error('Usage: memry <htpasswd <user>|listen <storage-path>>\n' +
+                  '\n' +
+                  'htpasswd <user>\n' +
+                  '   Generate htpasswd with scrypt\n' +
+                  '\n' +
+                  'listen <storage-path>\n' +
+                  '   Start server\n' +
+                  '\n' +
+                  '    -h <ip>,     --host <ip>         bind to host (default: 127.0.0.1)\n' +
+                  '    -p <port>,   --port <port>       listen on port (default: 8018)\n' +
+                  '    -a <file>,   --auth <file>       auth file (see `memry htpasswd`)\n' +
+                  '                 --tls-cert <file>   tls certificate\n' +
+                  '                 --tls-key <file>    tls key'
+                  );
     process.exit(1);
 };
 
@@ -56,7 +69,7 @@ switch(action) {
         };
 
         if(process.stdin.isTTY) {
-            read({prompt: 'Password: ', silent: true}, callback);
+            read({prompt: 'Password: ', silent: true, output: process.stderr}, callback);
         } else {
             process.stdin.on('data', function(buf) {
                 callback(undefined, buf.toString().trim());
