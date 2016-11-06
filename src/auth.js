@@ -68,7 +68,17 @@ var authenticate = function(req, res, authDB, granted, denied) {
     }
 };
 
+var generate = function(password, options, callback) {
+    options.N = options.N || 1;
+    options.r = options.r || 1;
+    options.p = options.p || 1;
+    scrypt.kdf(password, options, function(err, result) {
+        callback(err, err ? undefined : result.toString('base64'));
+    });
+};
+
 var exports = module.exports = {
     AuthDB: AuthDB,
     authenticate: authenticate,
+    generate: generate,
 };

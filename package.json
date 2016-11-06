@@ -30,6 +30,7 @@
   "dependencies": {
     "basic-auth": "^1.0.4",
     "minimist": "^1.2.0",
+    "read": "^1.0.7",
     "scrypt": "^6.0.3"
   }
 }
