@@ -6,7 +6,7 @@
 [downloads-url]: https://npmjs.org/package/memry
 [dependency-image]: https://img.shields.io/david/kpcyrd/memry.svg
 [dependency-url]: https://david-dm.org/kpcyrd/memry
-[travis-image]: https://img.shields.io/travis/kpcyrd/memry.svg
+[travis-image]: https://img.shields.io/travis/kpcyrd/memry/master.svg
 [travis-url]: https://travis-ci.org/kpcyrd/memry
 
 ![logo](logo.jpg)
@@ -42,6 +42,12 @@ curl -T file.bin http://127.0.0.1:8018
 docker build -t memry .
 mkdir storage
 docker run --rm -p 80:8018 -v `pwd`/storage:/storage memry
+```
+
+## Generate https certificate
+
+```
+openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
 ```
 
 ## Trivia
