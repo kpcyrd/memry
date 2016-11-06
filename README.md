@@ -11,7 +11,7 @@
 
 ![logo](logo.jpg)
 
-mem'ry was written for situations where you have to transfer files between two untrusted servers without the risk of compromising your private keys by forwarding your ssh keys (no sane person would do that, right?).
+mem'ry was written for situations where you have to transfer files between two untrusted servers without the risk of compromising your private keys by forwarding your `ssh-agent` (no sane person would do that, right?).
 
 You don't need to install any software on the sending system since standard curl is sufficient. It also works on systems that are running low on disk as there's no need to create temporary files, multiple files can be uploaded by packing them with `tar`, writing the archive to stdout and streaming it into `curl`.
 
