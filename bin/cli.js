@@ -69,7 +69,7 @@ switch(action) {
         };
 
         if(process.stdin.isTTY) {
-            read({prompt: 'Password: ', silent: true}, callback);
+            read({prompt: 'Password: ', silent: true, output: process.stderr}, callback);
         } else {
             process.stdin.on('data', function(buf) {
                 callback(undefined, buf.toString().trim());
