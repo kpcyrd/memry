@@ -27,5 +27,5 @@ script:
 - docker kill memry
 
 - openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -subj /CN=localhost
-- docker run -d --name memry -p 127.0.0.1:80:8018 -v `pwd`/storage:/storage memry --tls-cert cert.pem --tls-key key.pem
+- docker run -d --name memry -p 127.0.0.1:443:8018 -v `pwd`/storage:/storage memry --tls-cert cert.pem --tls-key key.pem
 - ./test.sh curl -sSkT- https://127.0.0.1
