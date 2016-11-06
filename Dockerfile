@@ -5,7 +5,7 @@ RUN chown memry. /memry /storage
 WORKDIR /memry
 COPY package.json ./
 COPY bin/ ./bin/
-COPY memry.js ./
+COPY src/ ./src/
 RUN npm install -g
 USER memry
 ENV MEMRY_HOST 0.0.0.0
