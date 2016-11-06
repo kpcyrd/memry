@@ -1,13 +1,12 @@
 sudo: required
 
 language: node_js
-#node_js:
-#- node
-#- iojs
-#- "6"
-#- "4" # debian sid
-#- "0.10" # debian stable
-# TODO: test those versions instead of the docker node version
+node_js:
+- node
+- iojs
+- "6"
+- "4" # debian sid
+- "0.10" # debian stable
 
 services:
 - docker
