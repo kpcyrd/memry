@@ -6,7 +6,6 @@ User=memry
 Environment="MEMRY_STORAGE=/var/lib/memry/storage"
 EnvironmentFile=-/etc/memryrc
 ExecStart=/usr/bin/memry listen ${MEMRY_STORAGE}
-CapabilityBoundingSet=
 PrivateDevices=true
 ProtectSystem=full
 NoNewPrivileges=true
