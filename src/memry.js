@@ -19,6 +19,7 @@ var crypto = require('crypto');
 var fs = require('fs');
 var path = require('path');
 var auth = require('./auth');
+var adapters = require('./adapter');
 
 var random = function(len) {
     return crypto.randomBytes(len).toString('hex');
@@ -45,16 +46,17 @@ var makeServer = function(options, callback) {
 
 exports.createServer = function(options) {
     options = options || {};
+    var adapterOption = options.adapter || 'fs';
     var filenameLength = options.filenameLength || 16;
     var storagePath = options.path;
 
     var authDB = new auth.AuthDB(options.authFile);
 
+    var adapter = adapters.get(adapterOption, storagePath);
+
     return makeServer(options, function(req, res) {
         var user = '(anonymous)';
         var id = random(filenameLength);
-        var destPath = path.join(storagePath, id + '.bin');
-        var tempPath = destPath + '.part';
 
         var log = function(text) {
             console.log('[%s/%s] %s', id, user, text);
@@ -63,19 +65,18 @@ exports.createServer = function(options) {
         auth.authenticate(req, res, authDB, function(credentials) {
             user = credentials.user || user;
 
-            // TODO: PUT only
-            log('streaming ==> ' + tempPath);
-            var stream = fs.createWriteStream(tempPath);
-            req.pipe(stream)
+            log('streaming');
+            var session = adapter(id);
+            session.pipeFrom(req);
 
             req.on('close', function() {
                 log('request got aborted');
-                stream.end();
+                session.abort();
             });
 
             req.on('end', function() {
-                fs.rename(tempPath, destPath, function() {
-                    log('done ==> ' + destPath);
+                session.done(function() {
+                    log('done');
                     res.writeHead(200);
                     res.end(JSON.stringify({
                         'status': 'ok',
