@@ -18,9 +18,9 @@ module.exports = exports = {
         'stdio': require('./adapter-stdio'),
         'gridfs': require('./adapter-gridfs'),
     },
-    get: function(key, arg) {
+    get: function(key, path, args) {
         if(Object.hasOwnProperty.call(exports.adapters, key)) {
-            return exports.adapters[key](arg);
+            return exports.adapters[key](path, args);
         }
     }
 };

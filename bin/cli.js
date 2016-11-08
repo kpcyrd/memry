@@ -18,19 +18,34 @@ var read = require('read');
 var memry = require('..');
 
 var usage = function() {
-    console.error('Usage: memry <htpasswd <user>|listen <storage-path>>\n' +
+    console.error('Usage: memry <htpasswd <user>|listen <path> [args ...]\n' +
                   '\n' +
-                  'htpasswd <user>\n' +
-                  '   Generate htpasswd with scrypt\n' +
-                  '\n' +
-                  'listen <storage-path>\n' +
+                  'listen <storage> <path> [args ...]\n' +
                   '   Start server\n' +
                   '\n' +
-                  '    -h <ip>,     --host <ip>         bind to host (default: 127.0.0.1)\n' +
-                  '    -p <port>,   --port <port>       listen on port (default: 8018)\n' +
-                  '    -a <file>,   --auth <file>       auth file (see `memry htpasswd`)\n' +
-                  '                 --tls-cert <file>   tls certificate\n' +
-                  '                 --tls-key <file>    tls key'
+                  '    -h <ip>,         --host <ip>             bind to host (default: 127.0.0.1)\n' +
+                  '    -p <port>,       --port <port>           listen on port (default: 8018)\n' +
+                  '    -a <file>,       --auth <file>           auth file (see `memry htpasswd`)\n' +
+                  '                     --tls-cert <file>       tls certificate\n' +
+                  '                     --tls-key <file>        tls key\n' +
+                  '    -s <adapter>,    --storage <adapter>     adapter that should be used for storage\n' +
+                  '\n' +
+                  '   Storage: fs <path>\n' +
+                  '\n' +
+                  '    path                                     write to this directory\n' +
+                  '\n' +
+                  '   Storage: stdio <prog> [args ...]\n' +
+                  '\n' +
+                  '    prog                                     execute this program\n' +
+                  '    args                                     arguments for program execution\n' +
+                  '                                             HINT: last argument id is the request id\n' +
+                  '\n' +
+                  '   Storage: gridfs <url>\n' +
+                  '\n' +
+                  '    url                                      mongodb url (mongodb://127.0.0.1/allymfiles)\n' +
+                  '\n' +
+                  'htpasswd <user>\n' +
+                  '   Generate htpasswd with scrypt'
                   );
     process.exit(1);
 };
@@ -41,13 +56,16 @@ switch(action) {
         var path = argv._[1] || process.env.MEMRY_STORAGE;
         if(!path) usage();
 
+        var adapter = argv.s || argv.storage || process.env.MEMRY_ADAPTER || 'fs';
         var host = argv.host || argv.h || process.env.MEMRY_HOST || '127.0.0.1';
         var port = parseInt(argv.port || argv.p || process.env.MEMRY_PORT || '8018');
+        var args = argv._.slice(2);
 
         var server = memry
             .createServer({
-                storage: 'fs',
+                adapter: adapter,
                 path: path,
+                args: args,
                 authFile: argv.auth || argv.a || process.env.MEMRY_AUTHFILE,
                 tlsKey: argv['tls-key'] || process.env.MEMRY_TLS_KEY,
                 tlsCert: argv['tls-cert'] || process.env.MEMRY_TLS_CERT,

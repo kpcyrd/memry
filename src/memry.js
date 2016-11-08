@@ -46,13 +46,14 @@ var makeServer = function(options, callback) {
 
 exports.createServer = function(options) {
     options = options || {};
-    var adapterOption = options.adapter || 'fs';
+    var storageAdapter = options.adapter;
     var filenameLength = options.filenameLength || 16;
     var storagePath = options.path;
+    var storageArgs = options.args || [];
 
     var authDB = new auth.AuthDB(options.authFile);
 
-    var adapter = adapters.get(adapterOption, storagePath);
+    var adapter = adapters.get(storageAdapter, storagePath, storageArgs);
 
     return makeServer(options, function(req, res) {
         var user = '(anonymous)';

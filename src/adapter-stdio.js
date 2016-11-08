@@ -49,9 +49,8 @@ var spawn = require('child_process').spawn;
  *
  */
 
-module.exports = (function(prog) {
+module.exports = (function(prog, args) {
     return (function(id, ready) {
-        var args = []; // TODO: maybe configurable
         var child = spawn(prog, args.concat([id]), {
             stdio: ['pipe', 'inherit', 'inherit']
         });
