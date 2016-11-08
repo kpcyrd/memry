@@ -15,6 +15,7 @@
 module.exports = exports = {
     adapters: {
         'fs': require('./adapter-fs'),
+        'stdio': require('./adapter-stdio'),
     },
     get: function(key, arg) {
         if(Object.hasOwnProperty.call(exports.adapters, key)) {
