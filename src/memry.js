@@ -66,22 +66,23 @@ exports.createServer = function(options) {
             user = credentials.user || user;
 
             log('streaming');
-            var session = adapter(id);
-            session.pipeFrom(req);
+            adapter(id, function(session) {
+                session.pipeFrom(req);
 
-            req.on('close', function() {
-                log('request got aborted');
-                session.abort();
-            });
+                req.on('close', function() {
+                    log('request got aborted');
+                    session.abort();
+                });
 
-            req.on('end', function() {
-                session.done(function() {
-                    log('done');
-                    res.writeHead(200);
-                    res.end(JSON.stringify({
-                        'status': 'ok',
-                        'id': id
-                    }) + '\n');
+                req.on('end', function() {
+                    session.done(function() {
+                        log('done');
+                        res.writeHead(200);
+                        res.end(JSON.stringify({
+                            'status': 'ok',
+                            'id': id
+                        }) + '\n');
+                    });
                 });
             });
         }, function() {

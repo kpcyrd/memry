@@ -50,7 +50,7 @@ var spawn = require('child_process').spawn;
  */
 
 module.exports = (function(prog) {
-    return (function(id) {
+    return (function(id, ready) {
         var args = []; // TODO: maybe configurable
         var child = spawn(prog, args.concat([id]), {
             stdio: ['pipe', 'inherit', 'inherit']
@@ -58,7 +58,7 @@ module.exports = (function(prog) {
 
         var stream = child.stdin;
 
-        return {
+        ready({
             stream: stream,
             pipeFrom: function(req) {
                 req.pipe(stream);
@@ -72,6 +72,6 @@ module.exports = (function(prog) {
                 });
                 stream.end();
             },
-        };
+        });
     });
 });

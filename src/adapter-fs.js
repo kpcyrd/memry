@@ -16,13 +16,13 @@ var fs = require('fs');
 var path = require('path');
 
 module.exports = (function(storagePath) {
-    return (function(id) {
+    return (function(id, ready) {
         var destPath = path.join(storagePath, id + '.bin');
         var tempPath = destPath + '.part';
 
         var stream = fs.createWriteStream(tempPath);
 
-        return {
+        ready({
             stream: stream,
             pipeFrom: function(req) {
                 req.pipe(stream);
@@ -35,6 +35,6 @@ module.exports = (function(storagePath) {
                     cb();
                 });
             },
-        };
+        });
     });
 });
