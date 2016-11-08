@@ -67,14 +67,12 @@ exports.createServer = function(options) {
 
             log('streaming');
             adapter(id, function(session) {
-                session.pipeFrom(req);
+                req.pipe(session.stream);
 
-                req.on('close', function() {
-                    log('request got aborted');
-                    session.abort();
-                });
+                // workaround for systems without Promise
+                var stages = 2;
 
-                req.on('end', function() {
+                var finish = function() {
                     session.done(function() {
                         log('done');
                         res.writeHead(200);
@@ -83,6 +81,19 @@ exports.createServer = function(options) {
                             'id': id
                         }) + '\n');
                     });
+                };
+
+                session.stream.on('finish', function() {
+                    if(!--stages) finish();
+                });
+
+                req.on('close', function() {
+                    log('request got aborted');
+                    session.abort();
+                });
+
+                req.on('end', function() {
+                    if(!--stages) finish();
                 });
             });
         }, function() {

@@ -26,25 +26,19 @@ module.exports = (function(url) {
 
             ready({
                 stream: stream,
-                pipeFrom: function(req) {
-                    req.pipe(stream);
-                },
                 abort: function() {
                     stream.end();
                 },
                 done: function(cb) {
-                    stream.on('finish', function() {
-                        db.collection('fs.files').update({
-                            'filename': id + '.bin.part'
-                        }, {
-                            '$set': {
-                                'filename': id + '.bin'
-                            }
-                        }, function(err, object) {
-                            cb();
-                        });
+                    db.collection('fs.files').update({
+                        'filename': id + '.bin.part'
+                    }, {
+                        '$set': {
+                            'filename': id + '.bin'
+                        }
+                    }, function(err, object) {
+                        cb();
                     });
-                    stream.end();
                 },
             });
         });

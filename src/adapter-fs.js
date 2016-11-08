@@ -24,9 +24,6 @@ module.exports = (function(storagePath) {
 
         ready({
             stream: stream,
-            pipeFrom: function(req) {
-                req.pipe(stream);
-            },
             abort: function() {
                 stream.end();
             },
