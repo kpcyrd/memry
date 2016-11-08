@@ -27,7 +27,7 @@ var spawn = require('child_process').spawn;
  * looks like this:
  *
  *     #!/bin/sh
- *     set -x
+ *     set -e
  *     cat > "files/$1.bin.part"
  *     mv "files/$1.bin.part" "files/$1.bin"
  *
