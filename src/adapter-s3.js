@@ -12,16 +12,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-module.exports = exports = {
-    adapters: {
-        'fs': require('./adapter-fs'),
-        'stdio': require('./adapter-stdio'),
-        'gridfs': require('./adapter-gridfs'),
-        's3': require('./adapter-s3'),
-    },
-    get: function(key, path, args) {
-        if(Object.hasOwnProperty.call(exports.adapters, key)) {
-            return exports.adapters[key](path, args);
-        }
-    }
-};
+
+var AWS = require('aws-sdk');
+var s3Stream = require('s3-upload-stream')(new AWS.S3());
+
+// TODO: configure s3Stream
+
+module.exports = (function(storagePath) {
+    return (function(id, ready) {
+        // TODO: create actual stream
+        var stream = null;
+
+        ready({
+            stream: stream,
+            abort: function() {
+                // TODO: might have to signal failure explicitly
+                stream.end();
+            },
+            done: function(cb) {
+                // TODO: implement success signaling
+                cb();
+            },
+        });
+    });
+});
