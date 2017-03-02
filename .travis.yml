@@ -26,26 +26,26 @@ script:
 - ./test.sh curl -sST- http://127.0.0.1:8018
 - kill %1
 
-#- docker run -d --name memry -p 127.0.0.1:80:8018 -v `pwd`/storage:/storage memry
-#- sleep 1
-#- docker ps | grep memry
-#- ./test.sh curl -sST- http://127.0.0.1
-#- docker kill memry
-#- docker rm memry
-#
-#- echo bar | memry htpasswd foo > auth.txt
-#- docker run -d --name memry -p 127.0.0.1:80:8018 -v `pwd`/storage:/storage -v `pwd`/auth.txt:/auth.txt:ro memry -a /auth.txt
-#- sleep 1
-#- docker ps | grep memry
-#- curl -sS http://127.0.0.1 | grep -q 'access denied'
-#- ./test.sh curl -sST- http://foo:bar@127.0.0.1
-#- docker kill memry
-#- docker rm memry
-#
-#- openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -subj /CN=localhost
-#- docker run -d --name memry -p 127.0.0.1:443:8018 -v `pwd`/storage:/storage -v `pwd`/cert.pem:/cert.pem:ro -v `pwd`/key.pem:/key.pem:ro memry --tls-cert /cert.pem --tls-key /key.pem
-#- sleep 1
-#- docker ps | grep memry
-#- ./test.sh curl -sSkT- https://127.0.0.1
-#- docker kill memry
-#- docker rm memry
+- docker run -d --name memry -p 127.0.0.1:80:8018 -v `pwd`/storage:/storage memry
+- sleep 1
+- docker ps | grep memry
+- ./test.sh curl -sST- http://127.0.0.1
+- docker kill memry
+- docker rm memry
+
+- echo bar | memry htpasswd foo > auth.txt
+- docker run -d --name memry -p 127.0.0.1:80:8018 -v `pwd`/storage:/storage -v `pwd`/auth.txt:/auth.txt:ro memry -a /auth.txt
+- sleep 1
+- docker ps | grep memry
+- curl -sS http://127.0.0.1 | grep -q 'access denied'
+- ./test.sh curl -sST- http://foo:bar@127.0.0.1
+- docker kill memry
+- docker rm memry
+
+- openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -subj /CN=localhost
+- docker run -d --name memry -p 127.0.0.1:443:8018 -v `pwd`/storage:/storage -v `pwd`/cert.pem:/cert.pem:ro -v `pwd`/key.pem:/key.pem:ro memry --tls-cert /cert.pem --tls-key /key.pem
+- sleep 1
+- docker ps | grep memry
+- ./test.sh curl -sSkT- https://127.0.0.1
+- docker kill memry
+- docker rm memry
