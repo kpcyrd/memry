@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:6
 RUN useradd -m memry
 RUN mkdir /memry /storage
 RUN chown memry. /memry /storage
