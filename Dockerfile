@@ -1,4 +1,4 @@
-FROM node:6-alpine
+FROM node:7-alpine
 RUN apk add --no-cache su-exec tini \
     && adduser -S memry
 COPY ./ /memry/
