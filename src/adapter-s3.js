@@ -14,14 +14,29 @@
  */
 
 var AWS = require('aws-sdk');
-var s3Stream = require('s3-upload-stream')(new AWS.S3());
+var s3UploadStream = require('s3-upload-stream');
 
-// TODO: configure s3Stream
+/*
+ * Environment variables:
+ *
+ *   $AWS_ACCESS_KEY_ID
+ *   $AWS_SECRET_ACCESS_KEY
+ *   $AWS_REGION
+ */
 
-module.exports = (function(storagePath) {
+module.exports = (function(bucketName) {
     return (function(id, ready) {
-        // TODO: create actual stream
-        var stream = null;
+        var s3Stream = s3UploadStream(new AWS.S3());
+
+        var destKey = id + '.bin';
+        var stream = s3Stream.upload({
+            Bucket: bucketName,
+            Key: destKey,
+        });
+
+        stream.on('error', function(error) {
+            console.error(error);
+        });
 
         ready({
             stream: stream,
@@ -31,7 +46,9 @@ module.exports = (function(storagePath) {
             },
             done: function(cb) {
                 // TODO: implement success signaling
-                cb();
+                stream.on('uploaded', function (details) {
+                    cb();
+                });
             },
         });
     });
