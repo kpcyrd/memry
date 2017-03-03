@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+USER=memry
 # change directory owner if not writable
-test -w "$MEMRY_STORAGE" || chown -- memry "$MEMRY_STORAGE"
-exec su-exec memry memry "$@"
+su-exec "$USER" test -w "$MEMRY_STORAGE" || chown -- "$USER" "$MEMRY_STORAGE"
+exec su-exec "$USER" memry "$@"
