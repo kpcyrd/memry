@@ -1,12 +1,12 @@
-FROM node:6
-RUN useradd -m memry
-RUN mkdir /memry /storage
-RUN chown memry. /memry /storage
+FROM node:6-alpine
+RUN adduser -h /memry -S memry \
+    && mkdir /storage \
+    && chown memry. /storage
 WORKDIR /memry
-COPY package.json ./
-COPY bin/ ./bin/
-COPY src/ ./src/
-RUN npm install -g
+COPY ./ ./
+RUN apk add --no-cache --virtual .build-deps-memry python make g++ \
+    && npm install -g \
+    && apk del .build-deps-memry
 USER memry
 ENV MEMRY_HOST 0.0.0.0
 ENV MEMRY_STORAGE /storage
