@@ -17,6 +17,7 @@ module.exports = exports = {
         'fs': require('./adapter-fs'),
         'stdio': require('./adapter-stdio'),
         'gridfs': require('./adapter-gridfs'),
+        's3': require('./adapter-s3'),
     },
     get: function(key, path, args) {
         if(Object.hasOwnProperty.call(exports.adapters, key)) {

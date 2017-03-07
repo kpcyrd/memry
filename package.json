@@ -28,11 +28,13 @@
   },
   "homepage": "https://github.com/kpcyrd/memry#readme",
   "dependencies": {
+    "aws-sdk": "^2.22.0",
     "basic-auth": "^1.0.4",
     "gridfs-stream": "^1.1.1",
     "minimist": "^1.2.0",
     "mongodb": "^2.2.11",
     "read": "^1.0.7",
+    "s3-upload-stream": "^1.0.7",
     "scrypt": "^6.0.3"
   }
 }
