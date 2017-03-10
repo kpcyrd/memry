@@ -61,6 +61,40 @@ docker run --rm -p 443:8018 -v `pwd`/storage:/storage  \
     memry --tls-cert /cert.pem --tls-key /key.pem
 ```
 
+## Storage adapters
+
+### Storage: fs (default)
+
+Writes files to disk.
+
+```
+memry -s fs listen storage/
+```
+
+### Storage: stdio
+
+Starts a program and pipes into stdin. See [src/adapter-stdio.js](src/adapter-stdio.js) for details.
+
+```
+memry -s stdio listen myprog --with -some flags
+```
+
+### Storage: gridfs (experimental)
+
+Writes files to mongodb.
+
+```
+memry -s gridfs listen mongodb://127.0.0.1/allymfiles
+```
+
+### Storage: s3 (experimental)
+
+Writes files to s3.
+
+```
+AWS_ACCESS_KEY_ID=XXX AWS_SECRET_ACCESS_KEY=XXX AWS_REGION=XXX memry -s s3 listen mybucket
+```
+
 ## Trivia
 
 mem'ry is an archaic term for "memory". The caption in the image reads "The tapir sent from Bengkulu to Calcutta in 1816" and is about 200 years old.
