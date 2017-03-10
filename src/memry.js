@@ -56,6 +56,11 @@ exports.createServer = function(options) {
     var adapter = adapters.get(storageAdapter, storagePath, storageArgs);
 
     return makeServer(options, function(req, res) {
+        if(req.method == 'GET') {
+            res.writeHead(200);
+            return res.end('k.\n');
+        }
+
         var user = '(anonymous)';
         var id = random(filenameLength);
 
