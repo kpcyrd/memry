@@ -38,7 +38,7 @@ var usage = function() {
                   '\n' +
                   '    prog                                     execute this program\n' +
                   '    args                                     arguments for program execution\n' +
-                  '                                             HINT: last argument id is the request id\n' +
+                  '                                             HINT: the request id is in $MEMRY_UPLOAD_ID\n' +
                   '\n' +
                   '   Storage: gridfs <url>\n' +
                   '\n' +

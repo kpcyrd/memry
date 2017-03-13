@@ -13,6 +13,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 var spawn = require('child_process').spawn;
+var extend = require('util')._extend;
 
 /*
  * Basic usage of this adapter works like this:
@@ -28,13 +29,13 @@ var spawn = require('child_process').spawn;
  *
  *     #!/bin/sh
  *     set -e
- *     cat > "files/$1.bin.part"
- *     mv "files/$1.bin.part" "files/$1.bin"
+ *     cat > "files/$MEMRY_UPLOAD_ID.bin.part"
+ *     mv "files/$MEMRY_UPLOAD_ID.bin.part" "files/$MEMRY_UPLOAD_ID.bin"
  *
  * The request body is read by `cat` and written to a file.
  * When the request is aborted, SIGTERM is sent to cat,
  * which makes it exit with an error code.
- * Since the script uses `set -x` this causes the script
+ * Since the script uses `set -e` this causes the script
  * to exit and `mv` is never executed.
  *
  * When EOF is sent, this causes `cat` to exit with 0 so the
@@ -51,17 +52,19 @@ var spawn = require('child_process').spawn;
 
 module.exports = (function(prog, args) {
     return (function(id, ready) {
-        var child = spawn(prog, args.concat([id]), {
-            stdio: ['pipe', 'inherit', 'inherit']
+        // clone process.env
+        var env = extend({}, process.env);
+        env['MEMRY_UPLOAD_ID'] = id;
+
+        var child = spawn(prog, args, {
+            stdio: ['pipe', 'inherit', 'inherit'],
+            env: env,
         });
 
         var stream = child.stdin;
 
         ready({
             stream: stream,
-            pipeFrom: function(req) {
-                req.pipe(stream);
-            },
             abort: function() {
                 child.kill('SIGTERM');
             },
