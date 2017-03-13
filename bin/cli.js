@@ -18,7 +18,7 @@ var read = require('read');
 var memry = require('..');
 
 var usage = function() {
-    console.error('Usage: memry <htpasswd <user>|listen <path> [args ...]\n' +
+    console.error('Usage: memry <htpasswd <user>|<listen|plug> <path> [args ...]\n' +
                   '\n' +
                   'listen <storage> <path> [args ...]\n' +
                   '   Start server\n' +
@@ -30,6 +30,11 @@ var usage = function() {
                   '                     --tls-key <file>        tls key\n' +
                   '    -s <adapter>,    --storage <adapter>     adapter that should be used for storage\n' +
                   '\n' +
+                  'plug <path> [args ...]\n' +
+                  '   Low-level access to storage adapters\n' +
+                  '\n' +
+                  '    -s <adapter>,    --storage <adapter>     adapter that should be used for storage\n' +
+                  '\n' +
                   '   Storage: fs <path>\n' +
                   '\n' +
                   '    path                                     write to this directory\n' +
@@ -39,6 +44,7 @@ var usage = function() {
                   '    prog                                     execute this program\n' +
                   '    args                                     arguments for program execution\n' +
                   '                                             HINT: the request id is in $MEMRY_UPLOAD_ID\n' +
+                  '                                                   `memry plug` uses this id if available.\n' +
                   '\n' +
                   '   Storage: gridfs <url>\n' +
                   '\n' +
@@ -72,6 +78,27 @@ switch(action) {
             });
         server.listen(port, host, function() {
             console.log('[+] ready %s://%s:%d -> %s', server.scheme, host, port, path);
+        });
+        break;
+
+    case 'plug':
+        var path = argv._[1] || process.env.MEMRY_STORAGE;
+        if(!path) usage();
+
+        var adapter = argv.s || argv.storage || process.env.MEMRY_ADAPTER || 'fs';
+        var args = argv._.slice(2);
+
+        var id = process.env['MEMRY_UPLOAD_ID'];
+
+        memry.streamToStorage({
+            adapter: adapter,
+            path: path,
+            args: args,
+        }, {
+            user: '(internal)',
+            id: id,
+        }, process.stdin, function() {
+            // done
         });
         break;
 

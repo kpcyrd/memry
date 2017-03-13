@@ -79,6 +79,12 @@ Starts a program and pipes into stdin. See [src/adapter-stdio.js](src/adapter-st
 memry -s stdio listen myprog --with -some flags
 ```
 
+It's also possible to plug the storage backend manually into the server:
+
+```
+memry listen -s stdio -- memry plug -s fs files/
+```
+
 ### Storage: gridfs (experimental)
 
 Writes files to mongodb.
