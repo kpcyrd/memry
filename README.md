@@ -17,6 +17,8 @@ You don't need to install any software on the sending system since standard curl
 
 Basically, it's `nc` file transfer for http(s) (except that you actually know if a file was transferred completely or partially).
 
+![recording][recording.gif]
+
 ## Installation
 
 ```
