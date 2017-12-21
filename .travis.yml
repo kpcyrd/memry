@@ -3,7 +3,6 @@ sudo: required
 language: node_js
 node_js:
 - node
-- iojs
 - "6"
 - "4" # debian sid
 - "0.10" # debian stable
