@@ -40,6 +40,8 @@ curl -T file.bin http://127.0.0.1:8018
 memry htpasswd foo >> auth.txt
 # upload with authentication
 curl -T file.bin -u foo https://127.0.0.1:8018
+# upload with powershell
+ls *.png | foreach { (new-object System.Net.WebClient).UploadData('http://192.168.1.2:8018', [System.IO.File]::ReadAllBytes($_.FullName)) }
 ```
 
 ## Usage with docker
