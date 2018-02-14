@@ -44,16 +44,61 @@ var makeServer = function(options, callback) {
     return server;
 };
 
-exports.createServer = function(options) {
+exports.streamToStorage = streamToStorage = function(options, transferOptions, stream, done) {
     options = options || {};
     var storageAdapter = options.adapter;
     var filenameLength = options.filenameLength || 16;
     var storagePath = options.path;
     var storageArgs = options.args || [];
 
-    var authDB = new auth.AuthDB(options.authFile);
-
     var adapter = adapters.get(storageAdapter, storagePath, storageArgs);
+
+    var id = transferOptions.id || random(filenameLength);
+    var user = transferOptions.user || '(anonymous)';
+
+    var log = function(text) {
+        console.log('[%s/%s] %s', id, user, text);
+    };
+
+    log('streaming');
+    adapter(id, function(session) {
+        stream.pipe(session.stream);
+
+        // workaround for systems without Promise
+        var stages = 2;
+
+        var finish = function() {
+            log('finishing');
+            session.done(function() {
+                log('done');
+                done(id);
+            });
+        };
+
+        session.stream.on('finish', function() {
+            // all bytes have been flushed
+            if(!--stages) finish();
+        });
+
+        stream.on('close', function() {
+            // stream is closing
+            // this is an abortion unless end has already been called
+            if(stages != 2) return;
+
+            log('request got aborted');
+            session.abort();
+        });
+
+        stream.on('end', function() {
+            // all bytes have been read
+            if(!--stages) finish();
+        });
+    });
+};
+
+exports.createServer = function(options) {
+    options = options || {};
+    var authDB = new auth.AuthDB(options.authFile);
 
     return makeServer(options, function(req, res) {
         if(req.method == 'GET') {
@@ -61,51 +106,20 @@ exports.createServer = function(options) {
             return res.end('k.\n');
         }
 
-        var user = '(anonymous)';
-        var id = random(filenameLength);
-
-        var log = function(text) {
-            console.log('[%s/%s] %s', id, user, text);
-        };
-
         auth.authenticate(req, res, authDB, function(credentials) {
-            user = credentials.user || user;
-
-            log('streaming');
-            adapter(id, function(session) {
-                req.pipe(session.stream);
-
-                // workaround for systems without Promise
-                var stages = 2;
-
-                var finish = function() {
-                    session.done(function() {
-                        log('done');
-                        res.writeHead(200);
-                        res.end(JSON.stringify({
-                            'status': 'ok',
-                            'id': id
-                        }) + '\n');
-                    });
-                };
-
-                session.stream.on('finish', function() {
-                    if(!--stages) finish();
-                });
-
-                req.on('close', function() {
-                    log('request got aborted');
-                    session.abort();
-                });
-
-                req.on('end', function() {
-                    if(!--stages) finish();
-                });
+            streamToStorage(options, {
+                user: credentials.user,
+            }, req, function(id) {
+                res.writeHead(200);
+                res.end(JSON.stringify({
+                    'status': 'ok',
+                    'id': id
+                }) + '\n');
             });
         }, function() {
             res.statusCode = 401;
             res.setHeader('WWW-Authenticate', 'Basic realm="auth"');
-            log('access denied');
+            console.log('access denied');
             res.end('access denied');
         });
     });
